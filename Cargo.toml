@@ -1,0 +1,21 @@
+[workspace]
+members = ["image_processor", "plugin_interface", "mirror_plugin", "blur_plugin"]
+default-members = ["image_processor"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+
+[workspace.dependencies]
+clap = { version = "4", features = ["derive"] }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "bmp", "gif", "webp", "tiff"] }
+libloading = "0.8"
+thiserror = "2"
+log = "0.4"
+env_logger = "0.11"
+plugin_interface = { path = "plugin_interface" }
+
+[profile.release]
+panic = "unwind"

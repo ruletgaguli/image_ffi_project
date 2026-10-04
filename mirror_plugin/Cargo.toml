@@ -1,0 +1,12 @@
+[package]
+name = "mirror_plugin"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[lib]
+name = "mirror"
+crate-type = ["cdylib"]
+
+[dependencies]
+plugin_interface.workspace = true

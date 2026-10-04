@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install lint components
+        run: rustup component add rustfmt clippy
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+      - name: Run Clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+  test:
+    name: Test
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build application and plugins
+        run: cargo build --workspace
+      - name: Run tests
+        run: cargo test --workspace --all-targets
+      - name: Run mirror
+        run: cargo run -p image_processor -- --input input.png --output out_mirror.png --plugin mirror --params params/mirror.txt
+      - name: Run blur
+        run: cargo run -p image_processor -- --input input.png --output out_blur.png --plugin blur --params params/blur.txt
+      - name: Verify processed images
+        run: cargo run -p image_processor --example verify_results
+      - name: Verify plugin errors and custom directory
+        run: cargo run -p image_processor --example verify_plugin_contract
