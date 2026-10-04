@@ -202,7 +202,7 @@ mod tests {
     #[test]
     fn bright_center_spreads_to_neighbors() {
         let mut pixels = vec![0; 3 * 3 * RGBA_CHANNELS];
-        for pixel in pixels.chunks_exact_mut(RGBA_CHANNELS) {
+        for pixel in pixels.as_chunks_mut::<RGBA_CHANNELS>().0 {
             pixel[3] = 255;
         }
         pixels[4 * RGBA_CHANNELS] = 255;
@@ -217,7 +217,9 @@ mod tests {
         );
         assert!(
             pixels
-                .chunks_exact(RGBA_CHANNELS)
+                .as_chunks::<RGBA_CHANNELS>()
+                .0
+                .iter()
                 .all(|pixel| pixel[3] == 255)
         );
     }
